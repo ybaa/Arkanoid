@@ -10,7 +10,6 @@ namespace Arkanoid
     public enum BallDirection { RightUp, RightDown, LeftUp, LeftDown, Stop};
     class Settings{
         public static int Width { get; set; }
-        public static int BallWidth { get; set; }
         public static int Height { get; set; }
         public static int Speed { get; set; }
         public static int Score { get; set; }
@@ -24,9 +23,8 @@ namespace Arkanoid
             Points = 10;
             Score = 0;
             Speed = 14;
-            Width = 60;
+            Width = 14;
             Height = 14;
-            BallWidth = 14;
             direction = Direction.Stop;
             ballDirection = BallDirection.Stop;
         }

@@ -40,8 +40,8 @@ namespace Arkanoid
             deck.Y = 34;
            // ball.X = 28;
             ball.Y = 33;
-            deck.X = 1;
-            ball.X = 8;
+            deck.X = 26;
+            ball.X = 30;
             
             FirstLevel();
 
@@ -74,16 +74,16 @@ namespace Arkanoid
         private void MoveDeck() {
             switch (Settings.direction) {
                 case Direction.Right:
-                    deck.X++;
+                    deck.X+=2;
                     break;
                 case Direction.Left:
-                    deck.X--;
+                    deck.X-=2;
                     break;
                 case Direction.Stop:
                     break;
             }
 
-            int maxXPosition = pbCanvas.Size.Width / Settings.Width - 1;
+            int maxXPosition = pbCanvas.Size.Width / Settings.Width - 10;
 
             if (deck.X < 0){
                 int position = 0;
@@ -123,7 +123,7 @@ namespace Arkanoid
                     break;
             }
 
-            int maxXPosition = pbCanvas.Size.Width / Settings.BallWidth;
+            int maxXPosition = pbCanvas.Size.Width / Settings.Width;
             int maxYPosition = pbCanvas.Size.Height / Settings.Height;
 
             if (ball.X < 0 && Settings.ballDirection == BallDirection.LeftUp)
@@ -138,25 +138,34 @@ namespace Arkanoid
                 Settings.ballDirection = BallDirection.LeftDown;
             if (ball.Y < 0 && Settings.ballDirection == BallDirection.RightUp)
                 Settings.ballDirection = BallDirection.RightDown;
-            if (ball.Y == deck.Y - 1 && Settings.ballDirection == BallDirection.RightDown && deck.X/3 <= ball.X/13 && deck.X/3 >= ball.X/13)
+            if (ball.Y == deck.Y - 1 && Settings.ballDirection == BallDirection.RightDown && deck.X  <= ball.X && deck.X + 8 >= ball.X)
                 Settings.ballDirection = BallDirection.RightUp;
-            if (ball.Y == deck.Y - 1 && Settings.ballDirection == BallDirection.LeftDown && deck.X/3 <= ball.X/13 && deck.X/3 >= ball.X/13)
+            if (ball.Y == deck.Y - 1 && Settings.ballDirection == BallDirection.LeftDown && deck.X <= ball.X && deck.X+8 >= ball.X)
                 Settings.ballDirection = BallDirection.LeftUp;
             if (ball.Y > maxYPosition)
                 Settings.GameOver = true;
 
-            for (int i = 0; i < block.Count; i++) {
-                if (ball.Y+1 == block[i].Y && block[i].X / 3 <= ball.X / 15 && block[i].X / 3 >= ball.X / 15) {
-                    if (Settings.ballDirection == BallDirection.RightUp) 
+          
+            for (int i = block.Count; i < 1; i--) {
+                if (ball.Y == block[i].Y && block[i].X <= ball.X  && block[i].X >= ball.X-2 ) { //this is bad, remember to change it
+                    if (Settings.ballDirection == BallDirection.RightUp) {
+                        block.Remove(block[i]);
                         Settings.ballDirection = BallDirection.RightDown;
-                    if (Settings.ballDirection == BallDirection.RightDown)
+                    }
+                    else if (Settings.ballDirection == BallDirection.RightDown) {
+                        block.Remove(block[i]);
                         Settings.ballDirection = BallDirection.RightUp;
-                    if (Settings.ballDirection == BallDirection.LeftDown)
+                    }
+                    else if (Settings.ballDirection == BallDirection.LeftDown) {
+                        block.Remove(block[i]);
                         Settings.ballDirection = BallDirection.LeftUp;
-                    if (Settings.ballDirection == BallDirection.LeftUp)
+                    }
+                    else if (Settings.ballDirection == BallDirection.LeftUp) { 
+                        block.Remove(block[i]);
                         Settings.ballDirection = BallDirection.LeftDown;
-
-                    block.Remove(block[i]);
+                    }
+                    
+                    
                 }
             }
             
@@ -194,14 +203,14 @@ namespace Arkanoid
                     if ((i % 2) == 0)
                             blockColor = Brushes.DarkSalmon;
 
-                    else {
+                    else 
                             blockColor = Brushes.OrangeRed;
                       
-                    }
+                    
 
-                    canvas.FillRectangle(blockColor, new Rectangle(block[i].X * Settings.Width, block[i].Y * Settings.Height, Settings.Width, Settings.Height));
-                    canvas.FillRectangle(Brushes.Yellow, new Rectangle(deck.X * Settings.Width, deck.Y * Settings.Height, Settings.Width*2, Settings.Height));
-                    canvas.FillEllipse(Brushes.Black, new Rectangle(ball.X * Settings.BallWidth, ball.Y * Settings.Height, Settings.BallWidth, Settings.Height));
+                    canvas.FillRectangle(blockColor, new Rectangle(block[i].X * Settings.Width*5, block[i].Y * Settings.Height, Settings.Width*5, Settings.Height));
+                    canvas.FillRectangle(Brushes.Yellow, new Rectangle(deck.X * Settings.Width, deck.Y * Settings.Height, Settings.Width*10, Settings.Height));
+                    canvas.FillEllipse(Brushes.Black, new Rectangle(ball.X * Settings.Width, ball.Y * Settings.Height, Settings.Width, Settings.Height));
                 }
 
                 

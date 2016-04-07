@@ -144,6 +144,21 @@ namespace Arkanoid
                 Settings.ballDirection = BallDirection.LeftUp;
             if (ball.Y > maxYPosition)
                 Settings.GameOver = true;
+
+            for (int i = 0; i < block.Count; i++) {
+                if (ball.Y+1 == block[i].Y && block[i].X / 3 <= ball.X / 15 && block[i].X / 3 >= ball.X / 15) {
+                    if (Settings.ballDirection == BallDirection.RightUp) 
+                        Settings.ballDirection = BallDirection.RightDown;
+                    if (Settings.ballDirection == BallDirection.RightDown)
+                        Settings.ballDirection = BallDirection.RightUp;
+                    if (Settings.ballDirection == BallDirection.LeftDown)
+                        Settings.ballDirection = BallDirection.LeftUp;
+                    if (Settings.ballDirection == BallDirection.LeftUp)
+                        Settings.ballDirection = BallDirection.LeftDown;
+
+                    block.Remove(block[i]);
+                }
+            }
             
         }
 

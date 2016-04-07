@@ -13,7 +13,7 @@ namespace Arkanoid
     public partial class Form1 : Form
     {
         private List<Tile> block = new List<Tile>();
-        Tile deck = new Tile();
+        private Tile deck = new Tile();
         
 
         public Form1(){
@@ -95,13 +95,22 @@ namespace Arkanoid
         }
 
         private void FirstLevel() {
-            
-            for (int i = 0; i < 100; i += 10)
-            {
+
+            int xx = 0;
+            int yy = 2;
+            for (int i = 0; i < 76; i++) {      //sth wrong with element 0 so i have to skip it
                 Tile element = new Tile();
-                element.X = i;
+                element.X = xx;
+                element.Y = yy;
                 block.Add(element);
+                xx++;
+
+                if (i%15==0){
+                    yy++;
+                    xx = 0;
+                }
             }
+            
         }
 
         private void pbCanvas_Paint(object sender, PaintEventArgs e) {
@@ -110,14 +119,19 @@ namespace Arkanoid
             if (!Settings.GameOver) {
                 Brush blockColor;
 
-                for (int i = 2; i < block.Count + 2; i++) {
+               
+               for (int i = 1; i < block.Count; i++) {      //don't show [0] element
+
+                   
                     if ((i % 2) == 0)
-                        blockColor = Brushes.Blue;
+                            blockColor = Brushes.DarkSalmon;
+
                     else {
-                        blockColor = Brushes.Beige;
+                            blockColor = Brushes.OrangeRed;
+                      
                     }
 
-                    //canvas.FillRectangle(blockColor, new Rectangle(block[i].X * Settings.Width, block[i].Y * Settings.Height, Settings.Width, Settings.Height));
+                    canvas.FillRectangle(blockColor, new Rectangle(block[i].X * Settings.Width, block[i].Y * Settings.Height, Settings.Width, Settings.Height));
                     canvas.FillRectangle(Brushes.Yellow, new Rectangle(deck.X * Settings.Width, deck.Y * Settings.Height, Settings.Width, Settings.Height));
                 }
 

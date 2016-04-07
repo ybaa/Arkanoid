@@ -20,10 +20,6 @@ namespace Arkanoid
         public Form1(){
             InitializeComponent();
             
-            
-            //int maxXPosition = pbCanvas.Size.Width / Settings.Width;
-           // int maxIPosition = pbCanvas.Size.Height / Settings.Height;
-
             //set default settings
             new Settings();
 
@@ -39,13 +35,14 @@ namespace Arkanoid
             labelGameOver.Visible = false;
             new Settings();
             block.Clear();
-            //deck = new Tile();
-            deck.X = 8;
+
+           // deck.X = 6;
             deck.Y = 34;
-            ball.X = 36;
+           // ball.X = 28;
             ball.Y = 33;
-
-
+            deck.X = 1;
+            ball.X = 8;
+            
             FirstLevel();
 
             labelScore.Text = Settings.Score.ToString();
@@ -65,7 +62,7 @@ namespace Arkanoid
                 else if (Input.KeyPressed(Keys.Left))
                     Settings.direction = Direction.Left;
                 else if (Input.KeyPressed(Keys.Space))
-                    Settings.ballDirection = BallDirection.RightUp;
+                    Settings.ballDirection = BallDirection.LeftUp;
                 
 
                 MoveDeck();
@@ -133,14 +130,18 @@ namespace Arkanoid
                 Settings.ballDirection = BallDirection.RightUp;
             if (ball.X < 0 && Settings.ballDirection == BallDirection.LeftDown)
                 Settings.ballDirection = BallDirection.RightDown;
-            if (ball.X > maxXPosition && Settings.ballDirection == BallDirection.RightUp)
+            if (ball.X > maxXPosition-1 && Settings.ballDirection == BallDirection.RightUp)
                 Settings.ballDirection = BallDirection.LeftUp;
-            if (ball.X > maxXPosition && Settings.ballDirection == BallDirection.RightDown)
+            if (ball.X > maxXPosition-1 && Settings.ballDirection == BallDirection.RightDown)
                 Settings.ballDirection = BallDirection.LeftDown;
             if (ball.Y < 0 && Settings.ballDirection == BallDirection.LeftUp)
                 Settings.ballDirection = BallDirection.LeftDown;
             if (ball.Y < 0 && Settings.ballDirection == BallDirection.RightUp)
                 Settings.ballDirection = BallDirection.RightDown;
+            if (ball.Y == deck.Y - 1 && Settings.ballDirection == BallDirection.RightDown && deck.X/3 <= ball.X/13 && deck.X/3 >= ball.X/13)
+                Settings.ballDirection = BallDirection.RightUp;
+            if (ball.Y == deck.Y - 1 && Settings.ballDirection == BallDirection.LeftDown && deck.X/3 <= ball.X/13 && deck.X/3 >= ball.X/13)
+                Settings.ballDirection = BallDirection.LeftUp;
             if (ball.Y > maxYPosition)
                 Settings.GameOver = true;
             

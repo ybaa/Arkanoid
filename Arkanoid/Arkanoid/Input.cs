@@ -16,7 +16,7 @@ namespace Arkanoid
         public static bool KeyPressed(Keys key){
             if (keyTable[key] == null)
                 return false;
-
+            else
             return (bool)keyTable[key];
         }
 

@@ -22,8 +22,8 @@ namespace Arkanoid
             Points = 10;
             Score = 0;
             Speed = 15;
-            Width = 20;
-            Height = 20;
+            Width = 60;
+            Height = 14;
             direction = Direction.Right;
         }
 

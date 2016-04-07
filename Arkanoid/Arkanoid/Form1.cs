@@ -14,11 +14,13 @@ namespace Arkanoid
     {
         private List<Tile> block = new List<Tile>();
         private Tile deck = new Tile();
+        private Tile ball = new Tile(); //ball needs the same values as tile (X and Y)
         
 
         public Form1(){
             InitializeComponent();
-
+            
+            
             //int maxXPosition = pbCanvas.Size.Width / Settings.Width;
            // int maxIPosition = pbCanvas.Size.Height / Settings.Height;
 
@@ -37,10 +39,13 @@ namespace Arkanoid
             labelGameOver.Visible = false;
             new Settings();
             block.Clear();
-            deck = new Tile();
-            deck.X = 10;
+            //deck = new Tile();
+            deck.X = 8;
             deck.Y = 34;
-            
+            ball.X = 36;
+            ball.Y = 33;
+
+
             FirstLevel();
 
             labelScore.Text = Settings.Score.ToString();
@@ -54,14 +59,17 @@ namespace Arkanoid
                 
             }
             else {
-                if (Input.KeyPressed(Keys.Right)) 
+                if (Input.KeyPressed(Keys.Right))
                     Settings.direction = Direction.Right;
-                
-                else if (Input.KeyPressed(Keys.Left)) 
+
+                else if (Input.KeyPressed(Keys.Left))
                     Settings.direction = Direction.Left;
+                else if (Input.KeyPressed(Keys.Space))
+                    Settings.ballDirection = BallDirection.RightUp;
                 
 
                 MoveDeck();
+                MoveBall();
             }
             pbCanvas.Invalidate();
         }
@@ -74,9 +82,11 @@ namespace Arkanoid
                 case Direction.Left:
                     deck.X--;
                     break;
+                case Direction.Stop:
+                    break;
             }
 
-            int maxXPosition = pbCanvas.Size.Width / Settings.Width;
+            int maxXPosition = pbCanvas.Size.Width / Settings.Width - 1;
 
             if (deck.X < 0){
                 int position = 0;
@@ -94,11 +104,53 @@ namespace Arkanoid
             deck.X = position;
         }
 
+        private void MoveBall() {
+            switch (Settings.ballDirection) {
+                case BallDirection.RightDown:
+                    ball.X++;
+                    ball.Y++;
+                    break;
+                case BallDirection.LeftUp:
+                    ball.X--;
+                    ball.Y--;
+                    break;
+                case BallDirection.RightUp:
+                    ball.X++;
+                    ball.Y--;
+                    break;
+                case BallDirection.LeftDown:
+                    ball.X--;
+                    ball.Y++;
+                    break;
+                case BallDirection.Stop:
+                    break;
+            }
+
+            int maxXPosition = pbCanvas.Size.Width / Settings.BallWidth;
+            int maxYPosition = pbCanvas.Size.Height / Settings.Height;
+
+            if (ball.X < 0 && Settings.ballDirection == BallDirection.LeftUp)
+                Settings.ballDirection = BallDirection.RightUp;
+            if (ball.X < 0 && Settings.ballDirection == BallDirection.LeftDown)
+                Settings.ballDirection = BallDirection.RightDown;
+            if (ball.X > maxXPosition && Settings.ballDirection == BallDirection.RightUp)
+                Settings.ballDirection = BallDirection.LeftUp;
+            if (ball.X > maxXPosition && Settings.ballDirection == BallDirection.RightDown)
+                Settings.ballDirection = BallDirection.LeftDown;
+            if (ball.Y < 0 && Settings.ballDirection == BallDirection.LeftUp)
+                Settings.ballDirection = BallDirection.LeftDown;
+            if (ball.Y < 0 && Settings.ballDirection == BallDirection.RightUp)
+                Settings.ballDirection = BallDirection.RightDown;
+            if (ball.Y > maxYPosition)
+                Settings.GameOver = true;
+            
+        }
+
         private void FirstLevel() {
 
             int xx = 0;
             int yy = 2;
-            for (int i = 0; i < 76; i++) {      //sth wrong with element 0 so i have to skip it
+            for (int i = 0; i < 5*15+1; i++) {      //sth wrong with element 0 so i have to skip it
                 Tile element = new Tile();
                 element.X = xx;
                 element.Y = yy;
@@ -132,7 +184,8 @@ namespace Arkanoid
                     }
 
                     canvas.FillRectangle(blockColor, new Rectangle(block[i].X * Settings.Width, block[i].Y * Settings.Height, Settings.Width, Settings.Height));
-                    canvas.FillRectangle(Brushes.Yellow, new Rectangle(deck.X * Settings.Width, deck.Y * Settings.Height, Settings.Width, Settings.Height));
+                    canvas.FillRectangle(Brushes.Yellow, new Rectangle(deck.X * Settings.Width, deck.Y * Settings.Height, Settings.Width*2, Settings.Height));
+                    canvas.FillEllipse(Brushes.Black, new Rectangle(ball.X * Settings.BallWidth, ball.Y * Settings.Height, Settings.BallWidth, Settings.Height));
                 }
 
                 
